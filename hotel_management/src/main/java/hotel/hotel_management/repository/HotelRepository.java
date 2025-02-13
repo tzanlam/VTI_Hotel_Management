@@ -1,4 +1,4 @@
-package hotel.hotel_management.modal.response;
+package hotel.hotel_management.repository;
 
 import hotel.hotel_management.modal.entity.hotel.Hotel;
 import org.springframework.data.jpa.repository.JpaRepository;
