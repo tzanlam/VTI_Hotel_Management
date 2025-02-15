@@ -1,12 +1,17 @@
 package hotel.hotel_management.modal.entity.hotel;
 
+import hotel.hotel_management.modal.entity.Base;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "hotel")
-public class Hotel {
+@EqualsAndHashCode(callSuper = true)
+public class Hotel extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -20,7 +25,15 @@ public class Hotel {
     @Column(name = "address")
     private String address;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
-    private Account account;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private HotelStatus status;
+
+    @ManyToMany(mappedBy = "hotels")
+    private List<Account> accounts;
+
+    public enum HotelStatus {
+        OPEN,
+        CLOSED,
+    }
 }
