@@ -3,6 +3,7 @@ package hotel.hotel_management.controller;
 import hotel.hotel_management.modal.request.AccountRequest;
 import hotel.hotel_management.service.account.AccountService;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class AccountController {
     }
 
     @PostMapping("/createReceptionist")
-    public ResponseEntity<?> createReceptionist(@RequestBody AccountRequest request) {
+    public ResponseEntity<?> createReceptionist(@Valid @RequestBody AccountRequest request) {
         try{
             return ResponseEntity.ok(accountService.createReceptionist(request));
         }catch (Exception e){

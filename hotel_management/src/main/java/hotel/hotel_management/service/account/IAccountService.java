@@ -1,13 +1,12 @@
 package hotel.hotel_management.service.account;
 
-import hotel.hotel_management.config.mailSender.MailSender;
+import hotel.hotel_management.config.mailSender.JavaMailSender;
 import hotel.hotel_management.config.security.JwtToken;
 import hotel.hotel_management.modal.entity.hotel.Account;
 import hotel.hotel_management.modal.request.AccountRequest;
 import hotel.hotel_management.modal.response.Hotel.AccountDTO;
 import hotel.hotel_management.modal.response.AuthResponse;
 import hotel.hotel_management.repository.AccountRepository;
-import jakarta.mail.MessagingException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,12 +22,12 @@ import java.util.stream.Collectors;
 @Service
 public class IAccountService implements AccountService{
     private final AccountRepository accountRepository;
-    private final MailSender mailSender;
+    private final JavaMailSender mailSender;
     private final AuthenticationManager authenticationManager;
     private final JwtToken jwtToken;
     private final PasswordEncoder passwordEncoder;
 
-    public IAccountService(AccountRepository accountRepository, MailSender mailSender, AuthenticationManager authenticationManager, JwtToken jwtToken, PasswordEncoder passwordEncoder) {
+    public IAccountService(AccountRepository accountRepository, JavaMailSender mailSender, AuthenticationManager authenticationManager, JwtToken jwtToken, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.mailSender = mailSender;
         this.authenticationManager = authenticationManager;
@@ -63,10 +62,10 @@ public class IAccountService implements AccountService{
     }
 
     @Override
-    public AccountDTO createHotelier(AccountRequest request) throws MessagingException {
+    public AccountDTO createHotelier(AccountRequest request){
         Account account = request.hotelier();
         accountRepository.save(account);
-        mailSender.sendMailFromAdmin(account.getEmail(), "Mã xác nhận đăng kí tài khoản", account.getConfirmationCode());
+        mailSender.sendMailFromAdmin(account.getEmail(), "Mã xác nhận đăng kí tài khoản", account.getConfirmationCode(), true);
         return new AccountDTO(account);
     }
 
@@ -92,7 +91,7 @@ public class IAccountService implements AccountService{
     }
 
     @Override
-    public AuthResponse login(String email, String password) throws MessagingException {
+    public AuthResponse login(String email, String password){
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password));
         SecurityContextHolder.getContext().setAuthentication(authenticate);

@@ -1,12 +1,14 @@
 package hotel.hotel_management.modal.request;
 
 import hotel.hotel_management.modal.entity.hotel.Account;
+import jakarta.validation.Valid;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static hotel.hotel_management.methodSupport.Method.randomConfirmationCode;
 
+@Valid
 @Data
 public class AccountRequest {
     private String email;

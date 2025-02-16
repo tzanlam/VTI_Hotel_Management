@@ -14,4 +14,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     List<Account> findByHotelId(@Param("hotelId") int hotelId);
 
     Account findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }
