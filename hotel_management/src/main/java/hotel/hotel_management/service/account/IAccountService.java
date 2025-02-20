@@ -7,6 +7,7 @@ import hotel.hotel_management.modal.request.AccountRequest;
 import hotel.hotel_management.modal.response.Hotel.AccountDTO;
 import hotel.hotel_management.modal.response.AuthResponse;
 import hotel.hotel_management.repository.AccountRepository;
+import hotel.hotel_management.repository.HotelRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,13 +28,15 @@ public class IAccountService implements AccountService{
     private final AuthenticationManager authenticationManager;
     private final JwtToken jwtToken;
     private final PasswordEncoder passwordEncoder;
+    private final HotelRepository hotelRepository;
 
-    public IAccountService(AccountRepository accountRepository, JavaMailSender mailSender, AuthenticationManager authenticationManager, JwtToken jwtToken, PasswordEncoder passwordEncoder) {
+    public IAccountService(AccountRepository accountRepository, JavaMailSender mailSender, AuthenticationManager authenticationManager, JwtToken jwtToken, PasswordEncoder passwordEncoder, HotelRepository hotelRepository) {
         this.accountRepository = accountRepository;
         this.mailSender = mailSender;
         this.authenticationManager = authenticationManager;
         this.jwtToken = jwtToken;
         this.passwordEncoder = passwordEncoder;
+        this.hotelRepository = hotelRepository;
     }
 
     @Override
@@ -46,8 +50,10 @@ public class IAccountService implements AccountService{
     @Override
     public AccountDTO findById(int id) {
         Account account = accountRepository.findById(id).orElse(null);
-        assert account != null;
-        return new AccountDTO(account);
+        if (Objects.nonNull(account)) {
+            return new AccountDTO(account);
+        }
+        return null;
     }
 
     @Override
@@ -70,10 +76,23 @@ public class IAccountService implements AccountService{
     }
 
     @Override
-    public AccountDTO createReceptionist(AccountRequest request) {
-        Account account = request.receptionist();
-        accountRepository.save(account);
-        return new AccountDTO(account);
+    public AccountDTO createReceptionist(int hotelId, int hotelierId, AccountRequest request) throws Exception {
+        if (!accountRepository.existsById(hotelierId)) {
+            throw new NullPointerException("Account doesn't exist");
+        }
+        if (!accountRepository.isHotelier(hotelierId)) {
+            throw new Exception("You is not authorization");
+        }
+        if (!accountRepository.existsById(hotelId)) {
+            throw new NullPointerException("Hotel doesn't exist");
+        }
+            Account account = request.receptionist();
+        if (account.getHotels() == null || account.getHotels().isEmpty()) {
+            account.setHotels(new ArrayList<>());
+        }
+            account.getHotels().add(hotelRepository.findById(hotelId).orElse(null));
+            accountRepository.save(account);
+            return new AccountDTO(account);
     }
 
     @Override

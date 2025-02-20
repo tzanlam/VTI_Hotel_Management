@@ -14,6 +14,7 @@ public class HotelRequest {
         hotel.setName(name);
         hotel.setImage(image);
         hotel.setAddress(address);
+        hotel.setStatus(Hotel.HotelStatus.OPEN);
         return hotel;
     }
 

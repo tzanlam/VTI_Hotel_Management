@@ -16,4 +16,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     Account findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    @Query("select case when a.position = 'HOTELIER' then true else false end from Account a where a.id = :accountId")
+    boolean isHotelier(@Param("accountId") int accountId);
+
 }

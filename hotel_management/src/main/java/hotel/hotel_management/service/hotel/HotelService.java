@@ -11,11 +11,11 @@ public interface HotelService {
     HotelDTO findHotelById(int id);
 
     // create
-    HotelDTO createHotel(HotelRequest request);
+    HotelDTO createHotel(HotelRequest request, int hotelierId) throws Exception;
 
     // update
     HotelDTO updateHotel(int id, HotelRequest request);
 
     // close-open hotel
-    HotelDTO changeStatusHotel(int id);
+    HotelDTO changeStatusHotel(int id) throws Exception;
 }

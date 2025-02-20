@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/")
+@RequestMapping("/api")
 public class AccountController {
     private final AccountService accountService;
 
@@ -50,9 +50,12 @@ public class AccountController {
     }
 
     @PostMapping("/createReceptionist")
-    public ResponseEntity<?> createReceptionist(@Valid @RequestBody AccountRequest request) {
+    public ResponseEntity<?> createReceptionist(
+            @RequestParam("hotelId") int hotelId,
+            @RequestParam("hotelierId") int hotelierId,
+            @Valid @RequestBody AccountRequest request) {
         try{
-            return ResponseEntity.ok(accountService.createReceptionist(request));
+            return ResponseEntity.ok(accountService.createReceptionist(hotelId,hotelierId, request));
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Create receptionist failed");
         }

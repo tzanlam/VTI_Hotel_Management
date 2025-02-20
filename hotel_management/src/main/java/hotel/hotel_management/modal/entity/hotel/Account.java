@@ -51,6 +51,7 @@ public class Account extends Base {
     }
     public enum Position {
         RECEPTIONIST,
+        MANAGER,
         HOTELIER
     }
 }

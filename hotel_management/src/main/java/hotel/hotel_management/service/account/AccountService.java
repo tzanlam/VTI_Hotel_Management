@@ -17,7 +17,7 @@ public interface AccountService {
 
     // create
     AccountDTO createHotelier(AccountRequest request) throws MessagingException;
-    AccountDTO createReceptionist(AccountRequest request);
+    AccountDTO createReceptionist(int hotelId,int hotelierId, AccountRequest request) throws Exception;
 
     // updateStatus
     AccountDTO updateStatusAccount(int accountId);

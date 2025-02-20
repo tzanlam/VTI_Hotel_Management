@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/")
+@RequestMapping("/api")
 public class HotelController {
     private final HotelService hotelService;
 
@@ -41,9 +41,11 @@ public class HotelController {
 
     @PostMapping("/newHotel")
     @PreAuthorize("hasAuthority('HOTELIER')")
-    public ResponseEntity<?> addNewHotel(@RequestBody HotelRequest request) {
+    public ResponseEntity<?> addNewHotel(
+            @RequestParam("accountId") int accountId,
+            @RequestBody HotelRequest request) {
         try{
-            return ResponseEntity.ok(hotelService.createHotel(request));
+            return ResponseEntity.ok(hotelService.createHotel(request, accountId));
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Add new hotel failed");
         }
