@@ -1,12 +1,12 @@
 package hotel.hotel_management.config.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +14,27 @@ import java.util.function.Function;
 
 @Component
 public class JwtToken {
+
     @Value("${jwt.secret}")
     private String secret;
-    public static final long EXPIRATION_TIME = 86400;
 
-    private Claims getALlClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    @Value("${jwt.expiration}")
+    private long expirationTime;
+
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public <T> T getClaimsFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getALlClaimsFromToken(token);
+        final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
 
@@ -36,18 +47,24 @@ public class JwtToken {
     }
 
     private boolean expiredToken(String token) {
-        return getALlClaimsFromToken(token).getExpiration().before(new Date());
+        try {
+            return getAllClaimsFromToken(token).getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true; // Token đã hết hạn
+        } catch (Exception e) {
+            return false; // Token không hợp lệ
+        }
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         long now = System.currentTimeMillis();
-        Date expiration = new Date(now + EXPIRATION_TIME * 1000);
+        Date expiration = new Date(now + expirationTime);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(now))
                 .setExpiration(expiration)
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
