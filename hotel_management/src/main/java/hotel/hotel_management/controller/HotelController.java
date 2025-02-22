@@ -1,6 +1,5 @@
 package hotel.hotel_management.controller;
 
-import hotel.hotel_management.modal.entity.hotel.Hotel;
 import hotel.hotel_management.modal.request.HotelRequest;
 import hotel.hotel_management.service.hotel.HotelService;
 import org.springframework.http.ResponseEntity;
