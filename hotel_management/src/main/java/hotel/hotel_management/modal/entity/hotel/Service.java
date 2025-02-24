@@ -20,5 +20,4 @@ public class Service {
     @ManyToOne
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
-
 }

@@ -21,24 +21,20 @@ public class Room {
     @Column(name = "room_type")
     private String roomType;
 
-    @Column(name = "note")
-    private String note;
-
-    @Column(name = "type_check_in")
-    @Enumerated(EnumType.STRING)
-    private TypeCheckin typeCheckIn;
-
     @Column(name = "price_per_day")
     private double pricePerDay;
 
     @Column(name = "price_per_night")
     private double pricePerNight;
 
+    @Column(name = "price_first_hour")
+    private double priceFirstHour;
+
     @Column(name = "price_per_hour")
     private double pricePerHour;
 
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     public enum Status {
@@ -46,16 +42,5 @@ public class Room {
         LIVED,
         NULLABLE,
         EXPIRE
-    }
-
-    public enum TypeCheckin {
-        WALK_IN,
-        FACEBOOK,
-        GOOGLE,
-        ZA_LO,
-        PHONE,
-        BOOKING,
-        GO2JOY,
-        TRAVEL
     }
 }
