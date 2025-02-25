@@ -3,11 +3,13 @@ package hotel.hotel_management.modal.entity;
 import hotel.hotel_management.modal.constant.StatusAction;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table
-public class Account {
+@EqualsAndHashCode(callSuper=true)
+public class Account extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -34,9 +36,6 @@ public class Account {
     @Column
     @Enumerated(EnumType.STRING)
     private StatusAction status;
-
-    @Embedded
-    private Base base;
 
     public enum Position {
         HOTELIER, MANAGER, RECEPTION
