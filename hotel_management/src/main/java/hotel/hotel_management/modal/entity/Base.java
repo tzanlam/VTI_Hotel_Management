@@ -1,14 +1,15 @@
 package hotel.hotel_management.modal.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Data
-public class Base {
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class Base {
     @Column(updatable = false)
     private LocalDateTime created;
 
