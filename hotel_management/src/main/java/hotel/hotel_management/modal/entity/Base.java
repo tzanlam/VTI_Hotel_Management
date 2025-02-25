@@ -1,29 +1,28 @@
 package hotel.hotel_management.modal.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@MappedSuperclass
 @Data
-public abstract class Base {
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
+public class Base {
+    @Column(updatable = false)
+    private LocalDateTime created;
 
-    @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
-
-    @PreUpdate
-    public void preUpdate() {
-        this.modifiedDate = LocalDateTime.now();
-    }
+    @Column
+    private LocalDateTime modified;
 
     @PrePersist
     public void prePersist() {
-        createdDate = LocalDateTime.now();
+        created = LocalDateTime.now();
+        modified = null;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        modified = LocalDateTime.now();
     }
 }
