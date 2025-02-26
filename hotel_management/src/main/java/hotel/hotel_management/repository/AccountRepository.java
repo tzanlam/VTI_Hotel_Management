@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END FROM Account WHERE email = :email")
     boolean existsByEmail(@Param("email") String email);
+
+    @Query("select a from Account a where a.email = :email")
+    Account findByEmail(@Param("email") String email);
 }

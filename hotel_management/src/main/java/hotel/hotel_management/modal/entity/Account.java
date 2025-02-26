@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table
@@ -33,9 +35,20 @@ public class Account extends Base {
     @Enumerated(EnumType.STRING)
     private Position position;
 
+    @ManyToMany
+    @JoinTable(
+            name = "account_hotel",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "hotel_id")
+    )
+    private List<Hotel> hotels;
+
     @Column
     @Enumerated(EnumType.STRING)
     private StatusAction status;
+
+    @Column
+    private String vertical;
 
     public enum Position {
         HOTELIER, MANAGER, RECEPTION
