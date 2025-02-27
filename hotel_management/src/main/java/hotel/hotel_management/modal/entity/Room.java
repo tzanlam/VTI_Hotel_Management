@@ -35,10 +35,6 @@ public class Room {
 
     public enum StatusRoom {
         AVAILABLE,
-        BOOKED,
-        EXPIRED_BOOKED,
-        STAY,
-        EXPIRED_STAY,
         FIXING,
         DELETED
     }
