@@ -24,6 +24,10 @@ public class Service {
     @Column
     private int quantity;
 
+    @ManyToOne
+    @JoinColumn
+    private Hotel hotel;
+
     @Column
     @Enumerated(EnumType.STRING)
     private StatusOL status;
