@@ -1,6 +1,5 @@
 package hotel.hotel_management.modal.entity;
 
-import hotel.hotel_management.modal.constant.StatusOL;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,10 +18,10 @@ public class Room {
     private String type;
 
     @Column
-    private String priceFirstHouse;
+    private String priceFirstHour;
 
     @Column
-    private String priceNextHouse;
+    private String priceNextHour;
 
     @Column
     private String priceDay;
@@ -32,5 +31,15 @@ public class Room {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private StatusOL status;
+    private StatusRoom status;
+
+    public enum StatusRoom {
+        AVAILABLE,
+        BOOKED,
+        EXPIRED_BOOKED,
+        STAY,
+        EXPIRED_STAY,
+        FIXING,
+        DELETED
+    }
 }
