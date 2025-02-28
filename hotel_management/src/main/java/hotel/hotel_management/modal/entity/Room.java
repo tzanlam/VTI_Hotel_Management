@@ -29,6 +29,10 @@ public class Room {
     @Column
     private String priceNight;
 
+    @ManyToOne
+    @JoinColumn
+    private Floor floor;
+
     @Column
     @Enumerated(EnumType.STRING)
     private StatusRoom status;
