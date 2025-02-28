@@ -18,16 +18,16 @@ public class Room {
     private String type;
 
     @Column
-    private String priceFirstHour;
+    private int priceFirstHour;
 
     @Column
-    private String priceNextHour;
+    private int priceNextHour;
 
     @Column
-    private String priceDay;
+    private int priceDay;
 
     @Column
-    private String priceNight;
+    private int priceNight;
 
     @ManyToOne
     @JoinColumn
