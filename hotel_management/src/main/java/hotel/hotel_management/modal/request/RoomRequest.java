@@ -7,10 +7,10 @@ import lombok.Data;
 public class RoomRequest {
     private String name;
     private String type;
-    private String priceFirstHour;
-    private String priceNextHour;
-    private String priceDay;
-    private String priceNight;
+    private int priceFirstHour;
+    private int priceNextHour;
+    private int priceDay;
+    private int priceNight;
 
     public Room addRoom() {
         Room room = new Room();
