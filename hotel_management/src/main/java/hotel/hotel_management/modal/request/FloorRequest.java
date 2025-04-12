@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class FloorRequest {
-    private int id;
     private String name;
     private int hotelId;
 }

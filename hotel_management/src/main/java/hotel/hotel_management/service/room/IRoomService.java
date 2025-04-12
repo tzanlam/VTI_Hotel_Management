@@ -1,8 +1,10 @@
 package hotel.hotel_management.service.room;
 
+import hotel.hotel_management.modal.entity.Floor;
 import hotel.hotel_management.modal.entity.Room;
 import hotel.hotel_management.modal.request.RoomRequest;
 import hotel.hotel_management.modal.response.RoomDTO;
+import hotel.hotel_management.repository.FloorRepository;
 import hotel.hotel_management.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +16,11 @@ import java.util.stream.Collectors;
 @Service
 public class IRoomService implements RoomService{
     private final RoomRepository roomRepository;
+    private final FloorRepository floorRepository;
 
-    public IRoomService(RoomRepository roomRepository) {
+    public IRoomService(RoomRepository roomRepository, FloorRepository floorRepository) {
         this.roomRepository = roomRepository;
+        this.floorRepository = floorRepository;
     }
 
     @Override
@@ -43,7 +47,13 @@ public class IRoomService implements RoomService{
     @Override
     public RoomDTO createRoom(RoomRequest request) {
         Room room = request.addRoom();
+        Floor floor = floorRepository.findById(request.getFloorId()).orElseThrow(
+                () -> new RuntimeException("Floor not found")
+        );
+        room.setFloor(floor);
         roomRepository.save(room);
+        floor.getRooms().add(room);
+        floorRepository.save(floor);
         return new RoomDTO(room);
     }
 

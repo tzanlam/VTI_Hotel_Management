@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -107,7 +108,7 @@ public class IAccountServiceImpl implements AccountService {
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtToken.generateToken(userDetails);
-        return new AuthResponse(token, email, account.getPosition().toString(), userDetails.getAuthorities());
+        return new AuthResponse(account,token, userDetails.getAuthorities());
     }
 
     @Override
@@ -121,12 +122,11 @@ public class IAccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO forgotPassword(String email, String newPassword) {
+    public AccountDTO forgotPassword(String email) {
         Account account = accountRepository.findByEmail(email);
         if (Objects.isNull(account)) {
             throw new RuntimeException("Account not found");
         }
-        account.setPassword(passwordEncoder.encode(newPassword));
         account.setVertical(randomConfirmationCode());
         mailSender.sendMailFromAdmin(account.getEmail(), "Forgot password", account.getVertical(), true);
         accountRepository.save(account);
@@ -146,14 +146,25 @@ public class IAccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean confirm(int accountId, String code) {
-        Account account = accountRepository.findById(accountId).orElseThrow(
-                () -> new RuntimeException("Account not found")
-        );
+    public boolean confirm(String email, String code) {
+        Account account = accountRepository.findByEmail(email);
+        if (Objects.isNull(account)) {
+            throw new RuntimeException("Account not found");
+        }
         if (code.equals(account.getVertical())) {
-            account.setStatus(StatusAction.ACTIVE);
-            account.setVertical(null);
-            accountRepository.save(account);
+            if (account.getStatus() == StatusAction.INACTIVE) {
+                account.setStatus(StatusAction.ACTIVE);
+                account.setVertical(null);
+                accountRepository.save(account);
+            }else {
+                PasswordEncoder encoder = new BCryptPasswordEncoder();
+                String newPass = randomConfirmationCode();
+                account.setVertical(null);
+                account.setPassword(encoder.encode(newPass));
+                accountRepository.save(account);
+                mailSender.sendMailFromAdmin(account.getEmail(), "Your new password", newPass, true);
+                return true;
+            }
             return true;
         }
         return false;

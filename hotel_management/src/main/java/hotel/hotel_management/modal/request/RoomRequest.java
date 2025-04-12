@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class RoomRequest {
+    private int floorId;
     private String name;
     private String type;
     private int priceFirstHour;

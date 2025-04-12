@@ -3,6 +3,7 @@ package hotel.hotel_management.controller;
 import hotel.hotel_management.modal.request.AccountRequest;
 import hotel.hotel_management.service.account.AccountService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +26,7 @@ public class AccountController {
     }
 
     @GetMapping("/getAccountById")
+    @PreAuthorize("hasAnyAuthority('HOTELIER', 'MANAGER', 'RECEPTION')")
     public ResponseEntity<?> GetAccountById(@RequestParam("accountId") int id) {
         try{
             return ResponseEntity.ok(accountService.getAccountById(id));
@@ -97,9 +99,9 @@ public class AccountController {
     }
 
     @PutMapping("/forgotPassword")
-    public ResponseEntity<?> ForgotPassword(@RequestParam("email") String email, @RequestParam("password") String password) {
+    public ResponseEntity<?> ForgotPassword(@RequestParam("email") String email) {
         try{
-            return ResponseEntity.ok(accountService.forgotPassword(email, password));
+            return ResponseEntity.ok(accountService.forgotPassword(email));
         }catch (Exception e) {
             return ResponseEntity.badRequest().body("Something went wrong when forgot password");
         }
@@ -114,10 +116,10 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/confirm")
-    public ResponseEntity<?> Confirm(@RequestParam("accountId") int accountId, @RequestParam("code") String code) {
+    @PostMapping("/confirm")
+    public ResponseEntity<?> Confirm(@RequestParam("email") String email, @RequestParam("code") String code) {
         try{
-            return ResponseEntity.ok(accountService.confirm(accountId, code));
+            return ResponseEntity.ok(accountService.confirm(email, code));
         }catch (Exception e) {
             return ResponseEntity.badRequest().body("Something went wrong when confirm");
         }

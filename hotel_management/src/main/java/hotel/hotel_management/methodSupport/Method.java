@@ -1,10 +1,16 @@
 package hotel.hotel_management.methodSupport;
 
+import hotel.hotel_management.modal.entity.Room;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.jpa.domain.Specification;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Method {
@@ -52,19 +58,36 @@ public class Method {
         }
     }
 
-//    public static LocalDateTime convertToLocalDateTime(String dateTimeString) {
-//        try {
-//            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-//            return LocalDateTime.parse(dateTimeString, dateTimeFormatter);
-//        } catch (DateTimeParseException e) {
-//            System.out.println("error formatter datetime");
-//            return null;
-//        }
-//    }
-
     public static LocalDateTime buildLocalDateTime(String date, String time) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         return LocalDateTime.of(LocalDate.parse(date, dateFormatter), LocalTime.parse(time, timeFormatter));
+    }
+
+    public static <T> Specification<T> searchBySpec(String keyword, String... fields) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+
+            List<Predicate> predicates = new ArrayList<>();
+            for (String field : fields) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(field)), "%" + keyword.toLowerCase() + "%"));
+            }
+
+            return criteriaBuilder.or(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    public static double calculatePriceHourly(Room room, int time){
+        return (room.getPriceFirstHour() + time * room.getPriceNextHour());
+    }
+
+    public static double calculatePriceDay(Room room, int day){
+        return room.getPriceDay()*day;
+    }
+
+    public static double calculatePriceNight(Room room){
+        return room.getPriceNight();
     }
 }

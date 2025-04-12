@@ -1,0 +1,12 @@
+.info-item {
+    padding: 10px;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    font-size: 17px;
+  }
+  
+  .info-item:hover {
+    background-color: #f0f0f0; /* Màu nền khi hover */
+    cursor: pointer;
+  }
+  

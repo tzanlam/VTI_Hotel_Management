@@ -1,0 +1,63 @@
+.light {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --menu-hover: #f0f0f0;
+  }
+  
+  .dark {
+    --background-color: #093b37;
+    --text-color: #ffffff;
+    --menu-hover: #1e1f20;
+  }
+  
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  .ant-layout {
+    background-color: var(--background-color);
+  }
+  
+  .ant-menu {
+    background-color: var(--background-color) !important;
+  }
+  
+  .ant-menu-item:hover,
+  .ant-menu-submenu-title:hover {
+    background-color: var(--menu-hover) !important;
+    color: #1bdb85;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: var(--background-color);
+    border-bottom: gray solid 2px;
+  }
+
+  .account-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  
+  .account-name {
+    font-weight: 600;
+  }
+
+  .ant-menu-submenu-selected{
+    /* background-color: #ffcccb !important; Màu nền khi chọn */
+    color: #100e0e !important; /* Màu chữ khi chọn */
+    font-weight: bold; /* Đậm chữ */
+  }
+
+  .ant-menu-item-selected {
+    /* background-color: #ffcccb !important; Màu nền khi chọn */
+    color: #000 !important; /* Màu chữ khi chọn */
+    font-weight: bold; /* Đậm chữ */
+  }
+  

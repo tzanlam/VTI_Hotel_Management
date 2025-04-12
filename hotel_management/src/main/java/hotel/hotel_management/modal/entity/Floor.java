@@ -4,6 +4,7 @@ import hotel.hotel_management.modal.constant.StatusOL;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,7 +23,7 @@ public class Floor {
     private Hotel hotel;
 
     @OneToMany(mappedBy = "floor")
-    private List<Room> rooms;
+    private List<Room> rooms = new ArrayList<>();
 
     @Column
     private StatusOL status;

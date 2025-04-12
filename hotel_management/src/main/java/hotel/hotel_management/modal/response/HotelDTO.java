@@ -13,7 +13,7 @@ public class HotelDTO {
     private String name;
     private String image;
     private String address;
-    private List<AccountDTO> accounts;
+//    private List<Integer> accountIds;
     private List<FloorDTO> floors;
     private String status;
 
@@ -22,11 +22,6 @@ public class HotelDTO {
         this.name = hotel.getName();
         this.image = hotel.getImage();
         this.address = hotel.getAddress();
-        this.accounts =
-                hotel.getAccounts() == null ?
-                        new ArrayList<>() :
-                        new ArrayList<>(hotel.getAccounts()).stream()
-                                .map(AccountDTO::new).collect(Collectors.toList());
         this.floors =
                 hotel.getFloors() == null ?
                         new ArrayList<>() :

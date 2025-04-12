@@ -22,10 +22,10 @@ public interface AccountService {
 
     // put
     AccountDTO updateAccount(AccountRequest request, int accountId);
-    AccountDTO forgotPassword(String email, String newPassword);
+    AccountDTO forgotPassword(String email);
     // deleted
     AccountDTO deleteAccount(int accountId);
 
     // method confirm
-    boolean confirm(int accountId, String code);
+    boolean confirm(String email, String code);
 }

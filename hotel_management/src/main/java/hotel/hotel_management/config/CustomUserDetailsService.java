@@ -1,6 +1,6 @@
 package hotel.hotel_management.config;
 
-import hotel.hotel_management.modal.entity.hotel.Account;
+import hotel.hotel_management.modal.entity.Account;
 import hotel.hotel_management.repository.AccountRepository;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;

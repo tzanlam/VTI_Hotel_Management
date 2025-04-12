@@ -4,6 +4,7 @@ import hotel.hotel_management.modal.constant.StatusOL;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,10 +25,10 @@ public class Hotel {
     private String address;
 
     @ManyToMany(mappedBy = "hotels")
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "hotels")
-    private List<Floor> floors;
+    @OneToMany(mappedBy = "hotel")
+    private List<Floor> floors = new ArrayList<>();
 
     @Column
     @Enumerated(EnumType.STRING)

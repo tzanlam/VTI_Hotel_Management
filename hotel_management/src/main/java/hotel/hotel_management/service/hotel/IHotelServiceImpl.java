@@ -1,22 +1,28 @@
 package hotel.hotel_management.service.hotel;
 
 import hotel.hotel_management.modal.constant.StatusOL;
+import hotel.hotel_management.modal.entity.Account;
 import hotel.hotel_management.modal.entity.Hotel;
 import hotel.hotel_management.modal.request.HotelRequest;
 import hotel.hotel_management.modal.response.AccountDTO;
 import hotel.hotel_management.modal.response.HotelDTO;
+import hotel.hotel_management.repository.AccountRepository;
 import hotel.hotel_management.repository.HotelRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class IHotelServiceImpl implements HotelService {
     private final HotelRepository hotelRepository;
+    private final AccountRepository accountRepository;
 
-    public IHotelServiceImpl(HotelRepository hotelRepository) {
+    public IHotelServiceImpl(HotelRepository hotelRepository, AccountRepository accountRepository) {
         this.hotelRepository = hotelRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -43,8 +49,17 @@ public class IHotelServiceImpl implements HotelService {
 
     @Override
     public HotelDTO createHotel(HotelRequest request) {
+        Account account = accountRepository.findById(request.getAccountId()).orElseThrow(
+                () -> new NullPointerException("Account not found")
+        );
         Hotel hotel = request.addHotel();
+        hotel.getAccounts().add(account);
         hotelRepository.save(hotel);
+        if (Objects.isNull(account.getHotels())) {
+            account.setHotels(new ArrayList<>());
+        }
+        account.getHotels().add(hotel);
+        accountRepository.save(account);
         return new HotelDTO(hotel);
     }
 
